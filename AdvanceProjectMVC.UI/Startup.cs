@@ -1,3 +1,4 @@
+using AdvanceProjectMVC.ConnectService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,29 @@ namespace AdvanceProjectMVC.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddHttpClient<EmployeeConnectService>(conf =>
+            {
+
+                // conf.BaseAddress = new Uri("http://localhost:23586");
+                conf.BaseAddress = new Uri(Configuration["myBaseUri"]);
+
+            });
+            services.AddHttpClient<TitleConnectService>(conf =>
+            {
+
+                // conf.BaseAddress = new Uri("http://localhost:23586");
+                conf.BaseAddress = new Uri(Configuration["myBaseUri"]);
+
+            });
+            services.AddHttpClient<BusinessUnitConnectService>(conf =>
+            {
+
+                // conf.BaseAddress = new Uri("http://localhost:23586");
+                conf.BaseAddress = new Uri(Configuration["myBaseUri"]);
+
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

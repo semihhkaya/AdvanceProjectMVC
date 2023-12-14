@@ -1,4 +1,4 @@
-﻿
+﻿@model EmployeeRegisterDTO
 @{
     Layout = null;
 }
@@ -28,23 +28,80 @@
                                     <img src="~/modernize/src/assets/images/logos/dark-logo.svg" width="180" alt="">
                                 </a>
                                 <p class="text-center">Kayıt Olun</p>
-                                <form>
-                                    <div class="mb-3">
-                                        <label for="exampleInputtext1" class="form-label">İsim</label>
-                                        <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
+                                <form asp-controller="Auth" asp-action="Register" method="post">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                                    <div class="form-group">
+                                        <label asp-for="Name">İsim</label>
+                                        <input asp-for="Name" class="form-control" />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Email Adresi</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+                                    <div class="form-group">
+                                        <label asp-for="Surname">Soyisim</label>
+                                        <input asp-for="Surname" class="form-control" />
+                                        <span asp-validation-for="Surname" class="text-danger"></span>
                                     </div>
-                                    <div class="mb-4">
-                                        <label for="exampleInputPassword1" class="form-label">Şifre</label>
-                                        <input type="password" class="form-control" id="exampleInputPassword1">
+
+                                    <div class="form-group">
+                                        <label asp-for="PhoneNumber">Telefon Numarası</label>
+                                        <input asp-for="PhoneNumber" class="form-control" />
+                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                     </div>
-                                    <a href="./index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Kayıt Ol</a>
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <p class="fs-4 mb-0 fw-bold">Hesabınız mevcut mu?</p>
-                                        <a class="text-primary fw-bold ms-2" href="./authentication-login.html">Giriş Yap</a>
+
+                                    <div class="form-group">
+                                        <label asp-for="Email">Email</label>
+                                        <input asp-for="Email" class="form-control" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="Password">Şifre</label>
+                                        <input asp-for="Password" type="password" class="form-control" />
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="BusinessUnitId">İş Birimi</label>
+                                        <select asp-for="BusinessUnitId" class="form-control">
+                                            <option value="">İş Birimi Seç</option>
+                                            @foreach (var businessUnit in ViewBag.BusinessUnit)
+                                            {
+                                                <option value="@businessUnit.Id">@businessUnit.BusinessUnitName</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="TitleId">Unvan</label>
+                                        <select asp-for="TitleId" class="form-control">
+                                            <option value="">Unvan Seç</option>
+                                            @foreach (var title in ViewBag.Title)
+                                            {
+                                                <option value="@title.Id">@title.TitleName</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="UpperEmployeeId">Bağlı Olacağı Çalışan</label>
+                                        <select asp-for="UpperEmployeeId" class="form-control">
+                                            <option value="">Bağlı Olacağı Çalışan</option>
+                                            @foreach (var employee in ViewBag.Employee)
+                                            {
+                                                <option value="@employee.Id">@employee.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+
+
+                                    @*<div class="form-group">
+            <label asp-for="IsActive"></label>
+            <input asp-for="IsActive" type="checkbox" />
+        </div>*@
+
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">Register</button>
                                     </div>
                                 </form>
                             </div>
