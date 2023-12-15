@@ -47,6 +47,13 @@ namespace AdvanceProjectMVC.UI
                 conf.BaseAddress = new Uri(Configuration["myBaseUri"]);
 
             });
+            services.AddHttpClient<AdvanceConnectService>(conf =>
+            {
+
+                // conf.BaseAddress = new Uri("http://localhost:23586");
+                conf.BaseAddress = new Uri(Configuration["myBaseUri"]);
+
+            });
             services.AddAuthentication(a =>
             {
                 a.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -83,7 +90,7 @@ namespace AdvanceProjectMVC.UI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Auth}/{action=Login}/{id?}");
             });
         }
     }

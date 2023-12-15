@@ -1,6 +1,7 @@
 ﻿using AdvanceProjectMVC.Dto.Employee;
 using AdvanceProjectMVC.UI.Extensions;
 using AdvanceProjectMVC.UI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace AdvanceProjectMVC.UI.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

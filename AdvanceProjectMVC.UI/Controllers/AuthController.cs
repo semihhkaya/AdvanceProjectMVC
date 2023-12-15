@@ -61,7 +61,8 @@ namespace AdvanceProjectMVC.UI.Controllers
 			var userIdentity = new ClaimsIdentity(claims, "login");
 			var userpri = new ClaimsPrincipal(userIdentity);
 
-			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri);
+			var authProp = new AuthenticationProperties() { ExpiresUtc = DateTimeOffset.Now.AddMinutes(1) };
+			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri,authProp);
 
 			//Sessiona değer atadım (extension)
 			HttpContext.Session.MySet("CurrentUser", dto);
@@ -94,9 +95,11 @@ namespace AdvanceProjectMVC.UI.Controllers
 			}
 			return View();
 		}
+
 		[HttpGet]
 		public async Task<IActionResult> Logout()
 		{
+			
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 			HttpContext.Session.Clear();
 			return RedirectToAction("Login", "Auth");
