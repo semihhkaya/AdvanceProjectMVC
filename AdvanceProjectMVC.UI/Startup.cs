@@ -1,4 +1,5 @@
 using AdvanceProjectMVC.ConnectService;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -46,6 +47,17 @@ namespace AdvanceProjectMVC.UI
                 conf.BaseAddress = new Uri(Configuration["myBaseUri"]);
 
             });
+            services.AddAuthentication(a =>
+            {
+                a.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(a =>
+            {
+                a.LoginPath = "/Auth/Login";
+                a.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+                a.Cookie.HttpOnly = true;
+            });
+            services.AddAuthorization();
+            services.AddSession(a => a.IdleTimeout = TimeSpan.FromMinutes(1));
 
         }
 
@@ -64,8 +76,9 @@ namespace AdvanceProjectMVC.UI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

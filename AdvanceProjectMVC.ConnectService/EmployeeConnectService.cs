@@ -45,21 +45,19 @@ namespace AdvanceProjectMVC.ConnectService
 
             return null;
         }
-        public async Task<(bool Success, string Message, EmployeeLoginDTO Data)> Login(EmployeeLoginDTO dto)
+        public async Task<EmployeeSelectDTO> Login(EmployeeLoginDTO employeeLoginDTO)
         {
-            StringContent stringContent = new StringContent(JsonConvert.SerializeObject(dto));
+            StringContent stringContent = new StringContent(JsonConvert.SerializeObject(employeeLoginDTO));
             stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             var response = await _client.PostAsync("login", stringContent);
 
             if (response.IsSuccessStatusCode)
             {
-                var responseData = JsonConvert.DeserializeObject<EmployeeLoginDTO>(await response.Content.ReadAsStringAsync());
-                return (true, null, responseData);
+                var responseData = JsonConvert.DeserializeObject<EmployeeSelectDTO>(await response.Content.ReadAsStringAsync());
+                return responseData;
             }
-
-            var errorMessage = await response.Content.ReadAsStringAsync();
-            return (false, errorMessage, null);
+            return null;
         }
 
 

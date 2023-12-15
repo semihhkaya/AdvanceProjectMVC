@@ -1,9 +1,14 @@
 ﻿using AdvanceProjectMVC.ConnectService;
 using AdvanceProjectMVC.Dto.Employee;
+using AdvanceProjectMVC.UI.Extensions;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AdvanceProjectMVC.UI.Controllers
@@ -29,22 +34,44 @@ namespace AdvanceProjectMVC.UI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Login(EmployeeLoginDTO dto)
+		public async Task<IActionResult> Login(EmployeeLoginDTO employeeLoginDto)
 		{
-			var result = await _employeeApi.Login(dto);
-
-			if (result.Success && result.Data != null)
+			var dto = await _employeeApi.Login(employeeLoginDto);
+			if (dto == null)
 			{
-
-
-				// TempData["kullanicidurumu"] = "Kullanıcı başarıyla giriş yaptı";
-
-				return RedirectToAction("Index","Home"); // veya başka bir sayfaya yönlendirme yapabilirsiniz.
+				// Giriş başarısızsa, hata mesajını göster
+				ModelState.AddModelError(string.Empty, "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
+				return View();
 			}
 
-			// Giriş başarısızsa, hata mesajını göster
-			ModelState.AddModelError(string.Empty, "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
-			return View();
+			HttpContext.Response.Cookies.Append("token", dto.Token, new CookieOptions
+			{
+				Expires = DateTimeOffset.Now.AddSeconds(20),
+			});
+
+			var claims = new List<Claim>()
+			{
+				new Claim(ClaimTypes.NameIdentifier,dto.Id.ToString()),
+				new Claim(ClaimTypes.Name,dto.Name),
+				new Claim(ClaimTypes.Surname,dto.Surname),
+				new Claim(ClaimTypes.Email,dto.Email),
+				new Claim(ClaimTypes.Role, dto.Title.TitleName)
+			};
+
+			var userIdentity = new ClaimsIdentity(claims, "login");
+			var userpri = new ClaimsPrincipal(userIdentity);
+
+			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri);
+
+			//Sessiona değer atadım (extension)
+			HttpContext.Session.MySet("CurrentUser", dto);
+
+			TempData["EmployeeFullName"] = dto.Name + " " + dto.Surname;
+			TempData["EmployeeTitle"] = dto.Title.TitleName;
+
+			return RedirectToAction("Index", "Home");
+
+
 		}
 
 
@@ -66,6 +93,13 @@ namespace AdvanceProjectMVC.UI.Controllers
 				return RedirectToAction("Login");
 			}
 			return View();
+		}
+		[HttpGet]
+		public async Task<IActionResult> Logout()
+		{
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			HttpContext.Session.Clear();
+			return RedirectToAction("Login", "Auth");
 		}
 	}
 }
