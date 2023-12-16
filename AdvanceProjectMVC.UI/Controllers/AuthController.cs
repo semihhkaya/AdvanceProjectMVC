@@ -61,11 +61,12 @@ namespace AdvanceProjectMVC.UI.Controllers
 			var userIdentity = new ClaimsIdentity(claims, "login");
 			var userpri = new ClaimsPrincipal(userIdentity);
 
-			var authProp = new AuthenticationProperties() { ExpiresUtc = DateTimeOffset.Now.AddMinutes(1) };
+			var authProp = new AuthenticationProperties() { ExpiresUtc = DateTimeOffset.Now.AddMinutes(10) };
 			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri,authProp);
 
 			//Sessiona değer atadım (extension)
 			HttpContext.Session.MySet("CurrentUser", dto);
+			
 
 			TempData["EmployeeFullName"] = dto.Name + " " + dto.Surname;
 			TempData["EmployeeTitle"] = dto.Title.TitleName;

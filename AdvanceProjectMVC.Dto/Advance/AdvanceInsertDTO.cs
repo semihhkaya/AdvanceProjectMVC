@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdvanceProjectMVC.Dto.Advance
 {
-	class AdvanceInsertDTO
+	public class AdvanceInsertDTO
 	{
 		public decimal? AdvanceAmount { get; set; }
 		public string AdvanceDescription { get; set; }
