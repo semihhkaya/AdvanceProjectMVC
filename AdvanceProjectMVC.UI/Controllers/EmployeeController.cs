@@ -2,9 +2,6 @@
 using AdvanceProjectMVC.Dto.Employee;
 using AdvanceProjectMVC.UI.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AdvanceProjectMVC.UI.Controllers
@@ -18,10 +15,12 @@ namespace AdvanceProjectMVC.UI.Controllers
 			_employeeConnectService = employeeConnectService;
 
 		}
+		
 		public IActionResult Index()
 		{
 			return View();
 		}
+
 
 		[HttpGet]
 		public async Task<IActionResult> GetAdvanceByEmployeeId()
@@ -32,10 +31,22 @@ namespace AdvanceProjectMVC.UI.Controllers
 				return BadRequest();
 			}
 
-
 			var data = await _employeeConnectService.GetAdvanceByEmployeeId(employee.Id);
-			
 			return View(data);
 		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetAdvanceDetails(int advanceId)
+		{
+
+			var data = await _employeeConnectService.GetAdvanceDetails(advanceId);
+			if (data!=null)
+			{
+				return View(data);
+			}
+			return BadRequest();
+			
+		}
+
 	}
 }

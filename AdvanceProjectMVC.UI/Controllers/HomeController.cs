@@ -4,16 +4,13 @@ using AdvanceProjectMVC.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace AdvanceProjectMVC.UI.Controllers
 {
-    [Authorize]
+	[Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -27,13 +24,10 @@ namespace AdvanceProjectMVC.UI.Controllers
         {
             var currentUser = HttpContext.Session.MyGet<EmployeeSelectDTO>("CurrentUser");
 
-            // ViewBag ile taşıdım
             ViewBag.EmployeeFullName = $"{currentUser?.Name} {currentUser?.Surname}";
             ViewBag.EmployeeTitle = currentUser?.Title?.TitleName;
 
-            
             var userClaims = User.Claims.ToList();
-
             
             ViewBag.UserName = User.FindFirst(ClaimTypes.Name)?.Value;
 

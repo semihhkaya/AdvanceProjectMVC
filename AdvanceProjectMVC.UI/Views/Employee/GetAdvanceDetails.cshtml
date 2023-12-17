@@ -1,0 +1,83 @@
+﻿@model List<AdvanceDetailDTO>
+
+@{
+    // İlk elemanın AdvanceDescription ve AdvanceAmount değerlerini al
+    var firstItem = Model.FirstOrDefault();
+    var lastItem = Model.LastOrDefault();
+}
+
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="card-title fw-semibold mb-4">Avans</h5>
+            <div class="card">
+                <div class="card-header">
+                    Genel Avans Bilgileri
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Avans Bilgileri</h5>
+                    <p class="card-text">Avans Açıklaması: @firstItem.AdvanceDescription</p>
+                    <p class="card-text">Talep Edilen Avans Miktarı (TL):  @firstItem.AdvanceAmount</p>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h5 class="card-title fw-semibold mb-4">Ödeme</h5>
+            <div class="card">
+                <div class="card-header">
+                    Ödeme/Makbuz
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Ödeme/Makbuz Bilgileri</h5>
+                    <p class="card-text">Makbuz No: @firstItem.ReceiptNo</p>
+                    <p class="card-text">Onaylanan Avans Miktarı (TL):  @firstItem.ApprovedAmount</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+
+                        <th>Avans Durumu</th>
+                        <th>İşlem Yapan Ad</th>
+                        <th>İşlem Yapan Soyad</th>
+                        <th>Onaylanan Tutar</th>
+                        <th>İşlem Tarihi</th>
+                        <th>Bir sonraki işlemi yapacak kişi</th>
+
+                        @*<th>Planlanan Ödeme Tarihi</th>
+                            <th>Makbuz No</th>*@
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@item.StatusName</td>
+                            <td>@item.EmployeeName</td>
+                            <td>@item.Surname</td>
+                            <td>@item.ApprovedAmount</td>
+                            <td>@item.Date</td>
+                            <td>@item.UpperEmployeeName</td>
+
+                            @*<td>@item.DeterminedPaymentDate</td>
+                                <td>@item.ReceiptNo</td>*@
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

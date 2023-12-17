@@ -3,44 +3,48 @@ using AdvanceProjectMVC.Dto.Employee;
 using AdvanceProjectMVC.UI.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AdvanceProjectMVC.UI.Controllers
 {
+	[Authorize]
 	public class AuthController : Controller
 	{
-		EmployeeConnectService _employeeApi;
+		EmployeeConnectService _employeeService;
 		TitleConnectService _titleConnectService;
 		BusinessUnitConnectService _businessUnitConnectService;
 
-		//GenelSayfaBaglantiServis _genelApi;
-		public AuthController(EmployeeConnectService employeeApi,TitleConnectService titleConnectService,BusinessUnitConnectService businessUnitConnectService)
+		public AuthController(EmployeeConnectService employeeService,
+							  TitleConnectService titleConnectService,
+							  BusinessUnitConnectService businessUnitConnectService)
 		{
-			_employeeApi = employeeApi;
+			_employeeService = employeeService;
 			_titleConnectService = titleConnectService;
 			_businessUnitConnectService = businessUnitConnectService;
-			//_genelApi = genelApi;
 		}
+
+		[AllowAnonymous]
 		[HttpGet]
 		public IActionResult Login()
 		{
 			return View();
 		}
 
+		[AllowAnonymous]
 		[HttpPost]
 		public async Task<IActionResult> Login(EmployeeLoginDTO employeeLoginDto)
 		{
-			var dto = await _employeeApi.Login(employeeLoginDto);
+			var dto = await _employeeService.Login(employeeLoginDto);
 			if (dto == null)
 			{
-				// Giriş başarısızsa, hata mesajını göster
 				ModelState.AddModelError(string.Empty, "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
+
 				return View();
 			}
 
@@ -62,47 +66,60 @@ namespace AdvanceProjectMVC.UI.Controllers
 			var userpri = new ClaimsPrincipal(userIdentity);
 
 			var authProp = new AuthenticationProperties() { ExpiresUtc = DateTimeOffset.Now.AddMinutes(10) };
-			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri,authProp);
+			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri, authProp);
 
-			//Sessiona değer atadım (extension)
-			HttpContext.Session.MySet("CurrentUser", dto);
-			
+			EmployeeSelectDTO employeeSession = new EmployeeSelectDTO()
+			{
+				Id = dto.Id,
+				Email = dto.Email,
+				Name = dto.Name,
+				Surname = dto.Surname,
+				Title = dto.Title,
+				PhoneNumber = dto.PhoneNumber,
+				TitleId = dto.TitleId,
+				BusinessUnitId = dto.BusinessUnitId,
+			};
+
+			HttpContext.Session.MySet("CurrentUser", employeeSession);
 
 			TempData["EmployeeFullName"] = dto.Name + " " + dto.Surname;
 			TempData["EmployeeTitle"] = dto.Title.TitleName;
 
 			return RedirectToAction("Index", "Home");
-
-
 		}
 
-
+		[AllowAnonymous]
 		[HttpGet]
 		public async Task<IActionResult> Register()
 		{
 			ViewBag.Title = await _titleConnectService.GetTitle();
 			ViewBag.BusinessUnit = await _businessUnitConnectService.GetBusinessUnit();
-			ViewBag.Employee = await _employeeApi.GetEmployee();
+			ViewBag.Employee = await _employeeService.GetEmployee();
+
 			return View();
 		}
+
+		[AllowAnonymous]
 		[HttpPost]
 		public async Task<IActionResult> Register(EmployeeRegisterDTO dto)
 		{
-			var donendeger = await _employeeApi.Register(dto);
+			var donendeger = await _employeeService.Register(dto);
 			if (donendeger)
 			{
 				TempData["kullanicidurumu"] = "Kullanıcı başarıyla kaydedildi";
 				return RedirectToAction("Login");
 			}
+
 			return View();
 		}
+
 
 		[HttpGet]
 		public async Task<IActionResult> Logout()
 		{
-			
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 			HttpContext.Session.Clear();
+
 			return RedirectToAction("Login", "Auth");
 		}
 	}
