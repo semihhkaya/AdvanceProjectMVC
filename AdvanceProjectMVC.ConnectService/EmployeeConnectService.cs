@@ -25,7 +25,7 @@ namespace AdvanceProjectMVC.ConnectService
 			StringContent stringContent = new StringContent(JsonConvert.SerializeObject(dto));
 
 			stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
+			
 			var donendeger = await _client.PostAsync("register", stringContent);
 			//çağrıdığımzı method httpresponsemessage döner aldığımız yolladığımız değer contentin içinde
 
@@ -52,6 +52,9 @@ namespace AdvanceProjectMVC.ConnectService
 			StringContent stringContent = new StringContent(JsonConvert.SerializeObject(employeeLoginDTO));
 			stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
+	//		_client.DefaultRequestHeaders.Authorization =
+	//new AuthenticationHeaderValue("Bearer", "Your Oauth token");
+
 			var response = await _client.PostAsync("login", stringContent);
 
 			if (response.IsSuccessStatusCode)
@@ -65,12 +68,24 @@ namespace AdvanceProjectMVC.ConnectService
 		//localhost:13275/Employee/GetAdvanceByEmployeeId?employeeId=12
 		public async Task<List<EmployeeAdvanceResponseDto>> GetAdvanceByEmployeeId(int employeeId)
 		{
-
 			var donendeger = await _client.GetAsync($"getadvancebyemployeeid?employeeId={employeeId}");
 
 			if (donendeger.IsSuccessStatusCode)
 			{
 				return JsonConvert.DeserializeObject<List<EmployeeAdvanceResponseDto>>(await donendeger.Content.ReadAsStringAsync());
+			}
+
+			return null;
+
+		}
+		public async Task<List<AdvanceDetailDTO>> GetAdvanceDetails(int advanceId)
+		{
+
+			var donendeger = await _client.GetAsync($"getadvancedetails?advanceId={advanceId}");
+
+			if (donendeger.IsSuccessStatusCode)
+			{
+				return JsonConvert.DeserializeObject<List<AdvanceDetailDTO>>(await donendeger.Content.ReadAsStringAsync());
 			}
 
 			return null;
