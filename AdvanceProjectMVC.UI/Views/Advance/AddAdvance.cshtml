@@ -16,72 +16,56 @@
 </head>
 
 <body>
-    <!--  Body Wrapper -->
-    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-         data-sidebar-position="fixed" data-header-position="fixed">
-        <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
-            <div class="d-flex align-items-center justify-content-center w-100">
-                <div class="row justify-content-center w-100">
-                    <div class="col-md-8 col-lg-6 col-xxl-3">
-                        <div class="card mb-0">
-                            <div class="card-body">
-                                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                                    <img src="~/modernize/src/assets/images/logos/dark-logo.svg" width="180" alt="">
-                                </a>
-                                <p class="text-center">Avans Talebi Oluştur</p>
-                                <form asp-controller="Advance" asp-action="AddAdvance" method="post">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <input type="hidden" asp-for="EmployeeId" />
 
-                                    <div class="form-group">
-                                        <label asp-for="AdvanceAmount">Avans Miktarı</label>
-                                        <input asp-for="AdvanceAmount" class="form-control" />
-                                        <span asp-validation-for="AdvanceAmount" class="text-danger"></span>
-                                    </div>
+    <div class="card-body">
 
-                                    <div class="form-group">
-                                        <label asp-for="AdvanceDescription">Avans Açıklaması</label>
-                                        <input asp-for="AdvanceDescription" class="form-control" />
-                                        <span asp-validation-for="AdvanceDescription" class="text-danger"></span>
-                                    </div>
+        <h5 class="card-title fw-semibold mb-4">Disabled forms</h5>
+        <div class="card mb-0">
+            <div class="card-body">
+                <form asp-controller="Advance" asp-action="AddAdvance" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="EmployeeId" />
 
-
-                                    <div class="form-group">
-                                        <label asp-for="DesiredDate">Avansı Talep Ettiğiniz Tarih</label>
-                                        <input asp-for="DesiredDate" type="date" class="form-control" />
-                                        <span asp-validation-for="DesiredDate" class="text-danger"></span>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label asp-for="ProjectId">Projeler</label>
-                                        <select asp-for="ProjectId" class="form-control">
-                                            <option value="">Proje Seçiniz</option>
-                                            @foreach (var project in ViewBag.Project)
-                                            {
-                                                <option value="@project.Id">@project.ProjectName</option>
-                                            }
-                                        </select>
-                                    </div>
-
-
-
-
-                                    @*<div class="form-group">
-            <label asp-for="IsActive"></label>
-            <input asp-for="IsActive" type="checkbox" />
-        </div>*@
-
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary">Register</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label asp-for="AdvanceAmount">Avans Miktarı</label>
+                        <input asp-for="AdvanceAmount" class="form-control" />
+                        <span asp-validation-for="AdvanceAmount" class="text-danger"></span>
                     </div>
-                </div>
+
+                    <div class="form-group">
+                        <label asp-for="AdvanceDescription">Avans Açıklaması</label>
+                        <input asp-for="AdvanceDescription" class="form-control" />
+                        <span asp-validation-for="AdvanceDescription" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label asp-for="DesiredDate">Avansı Talep Ettiğiniz Tarih</label>
+                        <input asp-for="DesiredDate" type="date" class="form-control" />
+                        <span asp-validation-for="DesiredDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ProjectId">Projeler</label>
+                        <select asp-for="ProjectId" class="form-control">
+                            <option value="">Proje Seçiniz</option>
+                            @foreach (var project in ViewBag.Project)
+                            {
+                                <option value="@project.Id">@project.ProjectName</option>
+                            }
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Ekle</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+
     <script src="~/modernize/src/assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="~/modernize/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>

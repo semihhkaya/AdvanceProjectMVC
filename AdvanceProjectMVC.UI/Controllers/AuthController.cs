@@ -66,6 +66,7 @@ namespace AdvanceProjectMVC.UI.Controllers
 			var userpri = new ClaimsPrincipal(userIdentity);
 
 			var authProp = new AuthenticationProperties() { ExpiresUtc = DateTimeOffset.Now.AddMinutes(10) };
+
 			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userpri, authProp);
 
 			EmployeeSelectDTO employeeSession = new EmployeeSelectDTO()
@@ -79,7 +80,7 @@ namespace AdvanceProjectMVC.UI.Controllers
 				TitleId = dto.TitleId,
 				BusinessUnitId = dto.BusinessUnitId,
 			};
-
+			
 			HttpContext.Session.MySet("CurrentUser", employeeSession);
 
 			TempData["EmployeeFullName"] = dto.Name + " " + dto.Surname;
