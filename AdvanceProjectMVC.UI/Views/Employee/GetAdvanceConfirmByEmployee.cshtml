@@ -1,0 +1,60 @@
+﻿@model List<AdvanceConfirmDTO>
+
+
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>AdvanceID</th>
+                    <th>Çalışanın Adı</th>
+                    <th>Unvanı</th>
+                    <th>Birimi</th>
+                    <th>StatusID</th>
+                    <th>Avansın Son Durumu</th>
+                    <th>Talep Oluşturma Tarihi</th>
+                    <th>Talep Tutarı</th>
+                    <th>İstenilen Tarih</th>
+                    <th>Son İşlem Yapan</th>
+                    <th>Unvanı</th>
+                    <th>Sıradaki İşlemi Yapacak</th>
+                    <th>Unvanı</th>
+                    <th>Onay</th>
+                </tr>
+            </thead>
+            <tbody>
+                int advanceId, int statusId,decimal advanceAmount
+
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td>@item.AdvanceID</td>
+                        <td>@item.EmployeeName @item.EmployeeSurname</td>
+                        <td>@item.EmployeeTitle</td>
+                        <td>@item.EmployeeBusinessUnit</td>
+                        <td>@item.StatusID</td>
+                        <td>@item.LastStatusName</td>
+                        <td>@item.RequestDate.Value</td>
+                        <td>@item.AdvanceAmount</td>
+                        <td>@item.DesiredDate.Value</td>
+                        <td>@item.TransactorName @item.TransactorSurname</td>
+                        <td>@item.TransactorTitleName</td>
+                        <td>@item.NextTransactorEmployeeName @item.NextTransactorEmployeeSurname</td>
+                        <td>@item.NextTransactorEmployeeTitle</td>
+                        <td>
+                            <a class="btn btn-success btn-sm" asp-controller="Advance" asp-action="AddAdvanceHistoryApprove" asp-route-advanceAmount="@item.AdvanceAmount" asp-route-advanceId="@item.AdvanceID" asp-route-statusId="@item.StatusID" type="submit"><i class="bi bi-pencil"></i> Onayla</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+</script>

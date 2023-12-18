@@ -61,6 +61,7 @@ namespace AdvanceProjectMVC.UI
                 conf.BaseAddress = new Uri(Configuration["myBaseUri"]);
 
             });
+
             services.AddAuthentication(a =>
             {
                 a.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;

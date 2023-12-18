@@ -1,0 +1,72 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+    <ul id="sidebarnav">
+        <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">Panel</span>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                <span>
+                    <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Ana Sayfa</span>
+            </a>
+        </li>
+        <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">Avans</span>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" asp-controller="Employee" asp-action="GetAdvanceByEmployeeId" aria-expanded="false">
+                <span>
+                    <i class="ti ti-article"></i>
+                </span>
+                <span class="hide-menu">Avans Taleplerim</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" asp-controller="Employee" asp-action="GetAdvanceConfirmByEmployee" aria-expanded="false">
+                <span>
+                    <i class="ti ti-alert-circle"></i>
+                </span>
+                <span class="hide-menu">Onay Bekleyen Avanslar</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" asp-controller="Advance" asp-action="AddAdvance" aria-expanded="false">
+                <span>
+                    <i class="ti ti-cards"></i>
+                </span>
+                <span class="hide-menu">Yeni Avans Talebi Oluştur</span>
+            </a>
+        </li>
+
+        <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">Kayıt/Giriş</span>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" asp-action="Login" asp-controller="Auth" aria-expanded="false">
+                <span>
+                    <i class="ti ti-login"></i>
+                </span>
+                <span class="hide-menu">Login</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" asp-action="Register" asp-controller="Auth" aria-expanded="false">
+                <span>
+                    <i class="ti ti-user-plus"></i>
+                </span>
+                <span class="hide-menu">Register</span>
+            </a>
+        </li>
+
+    </ul>
+
+</nav>

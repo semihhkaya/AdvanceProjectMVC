@@ -91,5 +91,17 @@ namespace AdvanceProjectMVC.ConnectService
 			return null;
 
 		}
+		public async Task<List<AdvanceConfirmDTO>> GetAdvanceConfirmByEmployee(int employeeId)
+		{
+			var donendeger = await _client.GetAsync($"getadvanceconfirmbyemployee?employeeId={employeeId}");
+
+			if (donendeger.IsSuccessStatusCode)
+			{
+				return JsonConvert.DeserializeObject<List<AdvanceConfirmDTO>>(await donendeger.Content.ReadAsStringAsync());
+			}
+
+			return null;
+
+		}
 	}
 }
