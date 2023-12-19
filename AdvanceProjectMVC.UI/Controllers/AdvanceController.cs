@@ -3,10 +3,12 @@ using AdvanceProjectMVC.Dto.Advance;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AdvanceProjectMVC.UI.Extensions;
 using AdvanceProjectMVC.Dto.Employee;
+using FluentValidation.Results;
+using AdvanceProjectMVC.UI.Validation;
+using AdvanceProjectMVC.Dto.Project;
 
 namespace AdvanceProjectMVC.UI.Controllers
 {
@@ -38,12 +40,25 @@ namespace AdvanceProjectMVC.UI.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AddAdvance(AdvanceInsertDTO dto)
 		{
+			var validator = new AdvanceInsertValidator();
+			ValidationResult validationResult = validator.Validate(dto);
+
+			if (!validationResult.IsValid)
+			{
+				foreach (var error in validationResult.Errors)
+				{
+					ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+				}
+				ViewBag.Project = await _projectConnectService.GetProject() ?? new List<ProjectSelectDTO>();
+				return View();
+			}
+
 			var data = await _advanceConnectService.AddAdvance(dto);
 			return RedirectToAction("Index", "Home");
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> AddAdvanceHistoryApprove(int advanceId, int statusId,decimal advanceAmount)
+		public async Task<IActionResult> AddAdvanceHistoryApprove(int advanceId, int statusId, decimal advanceAmount)
 		{
 			var employee = HttpContext.Session.MyGet<EmployeeSelectDTO>("CurrentUser");
 
@@ -51,18 +66,17 @@ namespace AdvanceProjectMVC.UI.Controllers
 			{
 				AdvanceID = advanceId,
 				AdvanceAmount = advanceAmount,
-				StatusID = statusId +1,
+				StatusID = statusId + 1,
 				TransactorID = employee.Id
-				
 			};
 
-
 			var data = await _advanceConnectService.AddAdvanceHistoryApprove(dto);
-			return RedirectToAction("GetAdvanceConfirmByEmployee", "Employee");
+
+			return RedirectToAction("GetUserAdvanceList", "Advance");
 		}
 
 
-		//Bu avansı sırası ile kimler onaylayacak?
+
 		public async Task<List<AdvanceOrderConfirmDTO>> GetAdvanceOrderConfirm(int businessUnitId, List<int> titles)
 		{
 			var employee = HttpContext.Session.MyGet<EmployeeSelectDTO>("CurrentUser");
@@ -71,11 +85,11 @@ namespace AdvanceProjectMVC.UI.Controllers
 				return new List<AdvanceOrderConfirmDTO>();
 			}
 
-			var data = await _advanceConnectService.GetAdvanceOrderConfirm(businessUnitId,titles);
+			var data = await _advanceConnectService.GetAdvanceOrderConfirm(businessUnitId, titles);
 
 			return data;
 		}
-		//  -- Bir avansı hangi kişilerin onayladığını gösterir 
+
 		public async Task<List<AdvanceApprovedEmployeeDTO>> GetAdvanceApproveEmployee(int advanceId, List<int> titles)
 		{
 			var employee = HttpContext.Session.MyGet<EmployeeSelectDTO>("CurrentUser");
@@ -88,13 +102,38 @@ namespace AdvanceProjectMVC.UI.Controllers
 
 			return data;
 		}
-		//  -- 5000 TL'lik gelen avans tutarını hangi TitleId'ler onaylayacak? avans tutarı ile birlikte rule gittim hangi rule id'lerin bu miktarı onaylayacağını buldum 
-		// Example Output : TitleId[4, 3]
+
 		public async Task<List<int>> GetTitleID(decimal advanceAmount)
 		{
 			var data = await _advanceConnectService.GetTitleID(advanceAmount);
 
 			return data;
 		}
+
+
+		public async Task<IActionResult> GetUserAdvanceList()
+		{
+			var employee = HttpContext.Session.MyGet<EmployeeSelectDTO>("CurrentUser");
+			if (employee is null)
+			{
+				return RedirectToAction("Auth", "Logout");
+			}
+			var data = await _advanceConnectService.GetUserAdvanceList(employee.Id, Convert.ToInt32(employee.BusinessUnitId));
+
+			return View(data);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> AdvanceReject(int advanceId)
+		{
+			var rejectAdvanceStatus =  await _advanceConnectService.RejectAdvance(advanceId);
+			if (rejectAdvanceStatus)
+			{
+				return RedirectToAction("GetUserAdvanceList", "Advance");
+			}
+
+			return RedirectToAction("GetUserAdvanceList", "Advance");
+		}
+
 	}
 }

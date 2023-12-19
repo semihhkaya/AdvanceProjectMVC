@@ -1,6 +1,10 @@
 ﻿using AdvanceProjectMVC.ConnectService;
+using AdvanceProjectMVC.Dto.BusinessUnit;
 using AdvanceProjectMVC.Dto.Employee;
+using AdvanceProjectMVC.Dto.Title;
 using AdvanceProjectMVC.UI.Extensions;
+using AdvanceProjectMVC.UI.Validation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -40,6 +44,20 @@ namespace AdvanceProjectMVC.UI.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Login(EmployeeLoginDTO employeeLoginDto)
 		{
+			var validator = new EmployeeLoginValidator();
+			ValidationResult validationResult = validator.Validate(employeeLoginDto);
+
+			if (!validationResult.IsValid)
+			{
+				foreach (var error in validationResult.Errors)
+				{
+					ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+				}
+
+				return View(); 
+			}
+
+
 			var dto = await _employeeService.Login(employeeLoginDto);
 			if (dto == null)
 			{
@@ -104,6 +122,23 @@ namespace AdvanceProjectMVC.UI.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Register(EmployeeRegisterDTO dto)
 		{
+			var validator = new EmployeeRegisterValidator();
+			ValidationResult validationResult = validator.Validate(dto);
+
+			if (!validationResult.IsValid)
+			{
+				foreach (var error in validationResult.Errors)
+				{
+					ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+				}
+
+				ViewBag.Title = await _titleConnectService.GetTitle() ?? new List<TitleSelectDTO>();
+				ViewBag.BusinessUnit = await _businessUnitConnectService.GetBusinessUnit() ?? new List<BusinessUnitSelectDTO>();
+				ViewBag.Employee = await _employeeService.GetEmployee() ?? new List<EmployeeSelectDTO>();
+				
+				return View();
+			}
+
 			var donendeger = await _employeeService.Register(dto);
 			if (donendeger)
 			{
