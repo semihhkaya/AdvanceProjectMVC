@@ -19,6 +19,7 @@ namespace AdvanceProjectMVC.ConnectService
         }
         public async Task<bool> AddAdvance(AdvanceInsertDTO dto)
         {
+            
             StringContent stringContent = new StringContent(JsonConvert.SerializeObject(dto));
 
             stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -82,6 +83,31 @@ namespace AdvanceProjectMVC.ConnectService
             {
                 return true;
             }
+            return false;
+        }
+
+        public async Task<List<UserAdvanceListDTO>> GetUserAdvanceList(int employeeId, int businessUnitID)
+		{
+            
+            var response = await _client.GetAsync($"getuseradvancelist?employeeId={employeeId}&businessUnitID={businessUnitID}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<List<UserAdvanceListDTO>>(await response.Content.ReadAsStringAsync());
+            }
+
+            return null;
+        }
+
+        public async Task<bool> RejectAdvance(int advanceId)
+		{
+            var response = await _client.GetAsync($"rejectadvance?advanceId={advanceId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
+            }
+
             return false;
         }
 

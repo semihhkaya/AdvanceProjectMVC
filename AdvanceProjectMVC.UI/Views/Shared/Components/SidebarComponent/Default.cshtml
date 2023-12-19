@@ -1,7 +1,9 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Http;
+@using AdvanceProjectMVC.UI.Extensions;
+@inject IHttpContextAccessor Accessor
+
 @{
+    var currentUser = Accessor.HttpContext.Session.MyGet<EmployeeSelectDTO>("CurrentUser");
 }
 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
     <ul id="sidebarnav">
@@ -10,7 +12,7 @@
             <span class="hide-menu">Panel</span>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link" href="./index.html" aria-expanded="false">
+            <a class="sidebar-link" asp-controller="Home" asp-action="Index" aria-expanded="false">
                 <span>
                     <i class="ti ti-layout-dashboard"></i>
                 </span>
@@ -29,14 +31,17 @@
                 <span class="hide-menu">Avans Taleplerim</span>
             </a>
         </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link" asp-controller="Employee" asp-action="GetAdvanceConfirmByEmployee" aria-expanded="false">
-                <span>
-                    <i class="ti ti-alert-circle"></i>
-                </span>
-                <span class="hide-menu">Onay Bekleyen Avanslar</span>
-            </a>
-        </li>
+        @if (currentUser?.TitleId != 1)
+        {
+            <li class="sidebar-item">
+                <a class="sidebar-link" asp-controller="Advance" asp-action="GetUserAdvanceList" aria-expanded="false">
+                    <span>
+                        <i class="ti ti-alert-circle"></i>
+                    </span>
+                    <span class="hide-menu">Onay Bekleyen Avanslar</span>
+                </a>
+            </li>
+        }
         <li class="sidebar-item">
             <a class="sidebar-link" asp-controller="Advance" asp-action="AddAdvance" aria-expanded="false">
                 <span>

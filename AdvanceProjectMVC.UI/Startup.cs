@@ -25,7 +25,7 @@ namespace AdvanceProjectMVC.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            services.AddHttpContextAccessor();
             services.AddHttpClient<EmployeeConnectService>(conf =>
             {
 

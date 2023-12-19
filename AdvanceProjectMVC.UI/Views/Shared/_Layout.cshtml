@@ -1,10 +1,19 @@
-﻿<!doctype html>
+﻿@using Microsoft.AspNetCore.Http;
+@using AdvanceProjectMVC.UI.Extensions;
+@inject IHttpContextAccessor Accessor
+
+@{
+    var currentUser = Accessor.HttpContext.Session.MyGet<EmployeeSelectDTO>("CurrentUser");
+}
+
+
+<!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Modernize Free</title>
+    <title>Avans Yönetim Sistemi</title>
     <link rel="shortcut icon" type="image/png" href="~/modernize/src/assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="~/modernize/src/assets/css/styles.min.css" />
 </head>
@@ -18,8 +27,8 @@
             <!-- Sidebar scroll-->
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a href="./index.html" class="text-nowrap logo-img">
-                        <img src="~/modernize/src/assets/images/logos/dark-logo.svg" width="180" alt="" />
+                    <a asp-controller="Home" asp-action="Index" class="text-nowrap logo-img">
+                        <img src="~/modernize/src/assets/images/logos/dark-logo.svg" width="180" alt="" title="Avans Yönetim Sistemi" />
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
@@ -52,7 +61,7 @@
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            
+
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                    aria-expanded="false">
@@ -62,16 +71,13 @@
                                     <div class="message-body">
                                         <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">@ViewBag.UserName</p>
+                                            <p class="mb-0 fs-3">@currentUser.Name</p>
                                         </a>
                                         <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-mail fs-6"></i>
-                                            <p class="mb-0 fs-3">My Account</p>
+                                            <i class="ti ti-user-plus fs-6"></i>
+                                            <p class="mb-0 fs-3">@currentUser.Title.TitleName</p>
                                         </a>
-                                        <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-list-check fs-6"></i>
-                                            <p class="mb-0 fs-3">My Task</p>
-                                        </a>
+
                                         <a asp-controller="Auth" asp-action="Logout" class="btn btn-outline-primary mx-3 mt-2 d-block">Çıkış Yap</a>
                                     </div>
                                 </div>
